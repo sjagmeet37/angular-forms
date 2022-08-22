@@ -1,6 +1,11 @@
 <div class="container">
     <h1>User Form</h1>
     <form #form="ngForm" (ngSubmit)="onFormSubmit(form)">
+
+        <div [hidden] = "!hasError" class="alert alert-danger">
+            {{errorMessage}}
+        </div>
+
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
             <input type="text" id="name" name="name" class="form-control" placeholder="Name"

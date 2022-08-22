@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UserSettings } from '../models/user-settings';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'af-user-settings-form',
@@ -16,15 +17,34 @@ export class UserSettingsFormComponent implements OnInit {
     interfaceStyle : "light" 
   };
 
+  hasError : boolean = false;
+  errorMessage : string = "";
+
   userSettings : UserSettings = {... this.orignalUserSettings}
 
-  constructor() { }
+  constructor(private dataSetvice: DataService) { }
 
   ngOnInit(): void {
   }
 
+  onFormError(obj : any) : void{
+      this.hasError = true;
+      this.errorMessage = obj.error.errorMessage;
+  } 
+
   onFormSubmit(form : NgForm) : void {
     console.log(form.valid);
+
+    if(form.valid){
+      this.dataSetvice.handlePostRequest(this.userSettings).subscribe(
+        result => console.log(result),
+        error => this.onFormError(error)
+      );
+    } else {
+      this.hasError = true
+      this.errorMessage = "Please resolve errors"
+    }
+
   }
 
 }
